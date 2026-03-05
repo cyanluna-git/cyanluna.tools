@@ -64,12 +64,20 @@ python3 pptx-generator/pptx_inspector.py your-template.pptx
 
 **Extracts:**
 - Theme name and color scheme (all 12 OOXML theme roles)
+- **Design colors from shapes** -- for Canva/Slidesgo-style templates that use default Office theme but embed real colors in shapes
 - Recommended color map (ready-to-paste YAML for scenario frontmatter)
 - Font scheme (heading + body, Latin + East Asian)
 - All slide layouts with placeholder details
 - Layout mapping (template layouts -> scenario layout types)
 
-**Example output:**
+**Handles two template types:**
+
+| Type | Examples | How colors are detected |
+|------|----------|------------------------|
+| **Custom theme** | Corporate templates | Reads OOXML theme color roles directly |
+| **Default Office theme** | Canva, Slidesgo, SlidesCarnival | Scans shape-level `srgbClr` values, classifies by luminance |
+
+**Example output (corporate template):**
 ```
 ## Theme
 - Name: Atlas Copco Group 2023
@@ -84,13 +92,24 @@ colors:
   secondary: "#123F6D"
   sage: "#5D7875"
   coral: "#F68363"
+```
 
-## Layout Mapping (template -> scenario)
-| cover            | Title Slide with Full-width Image... |
-| section_divider  | Section Header                       |
-| screenshot_right | Content and Picture to the right...  |
-| full_content     | Title and Content                    |
-| closing          | Logo slide                           |
+**Example output (Canva/Slidesgo template):**
+```
+## Design Colors (from slide shapes)
+Custom theme: No (default Office → colors extracted from shapes)
+| HEX      | Count |
+|----------|-------|
+| #FFD699  | 168   |
+| #1E1A1B  | 78    |
+| #2DCD9D  | 26    |
+
+## Recommended Color Map (for scenario frontmatter)
+colors:
+  text: "#1E1A1B"
+  primary: "#2DCD9D"
+  gray_bg: "#FFD699"
+  accent: "#D3FFF2"
 ```
 
 JSON mode: `python3 pptx_inspector.py template.pptx --json`
