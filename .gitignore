@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.DS_Store
+output/
+
+# Keep only the sample template, ignore any user-added templates
+pptx-generator/example/*.pptx
+!pptx-generator/example/sample-template.pptx
