@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tmux Run Ops"
+  short_description: "Run and control local dev servers from tmux"
+  default_prompt: "Use $tmux-run-ops to start a localhost dev server in a tmux run pane, inspect the port owner, health-check the app, or stop the process cleanly."

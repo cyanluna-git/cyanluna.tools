@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tmux Layout"
+  short_description: "Create and normalize tmux workspace layouts"
+  default_prompt: "Use $tmux-layout to set up or normalize a tmux session with named windows, predictable pane splits, and pane headers based on the current path."

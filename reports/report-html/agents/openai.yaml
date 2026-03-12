@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report HTML"
+  short_description: "Branded markdown-to-HTML report renderer"
+  default_prompt: "Use $report-html to turn this markdown report into a branded HTML deliverable or set up a reusable wrapper and config for that renderer."

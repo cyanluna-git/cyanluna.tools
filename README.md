@@ -1,16 +1,23 @@
 # cyanluna.tools
 
-Shared skill repository for presentation, report, and document-generation workflows.
+Shared skill repository for presentation, report, document-generation, and tmux workspace workflows.
 
 Machine setup guide:
 - [`docs/macos-shared-skill-registry.md`](docs/macos-shared-skill-registry.md)
 
 Currently included:
-- `pptx/pptx-generator`
-- `pptx/pptx-refine`
 - `reports/report-pipeline`
-- `reports/html-report`
-- `reports/pdf-print`
+- `reports/report-html`
+- `reports/report-pdf-print`
+- `reports/report-pptx`
+- `reports/report-pptx-refine`
+- `reports/report-pptx-generator`
+- `tmux/tmux-router`
+- `tmux/tmux-layout`
+- `tmux/tmux-pane-control`
+- `tmux/tmux-agent-bridge`
+- `tmux/tmux-run-ops`
+- `tmux/tmux-snapshot`
 
 ```
                                     +------------------+
@@ -22,29 +29,49 @@ Currently included:
                                      layouts extracted)
                                              |
                                              v
-Documents  ──>  pptx-refine  ──>  scenario.md  ──>  pptx-generator  ──>  .pptx
-(reports,        (analyze,         (structured       (python-pptx        (editable in
- specs,           inspect,          slide plan        code gen)           PowerPoint)
- notes)           interview)        + colors/fonts)
+Documents  ──>  report-pptx  ──>  report-pptx-refine  ──>  scenario.md  ──>  report-pptx-generator  ──>  .pptx
+(reports,        (route)            (analyze,             (structured       (python-pptx               (editable in
+ specs,                              inspect,              slide plan        code gen)                  PowerPoint)
+ notes)                              interview)            + colors/fonts)
 ```
 
 ```text
-markdown report  ──>  report-pipeline  ──>  html-report  ──>  html
+markdown report  ──>  report-pipeline  ──>  report-html  ──>  html
                         (orchestrate)       (layout)
-                                                  |
-                                                  v
-                                             pdf-print  ──>  pdf
+                                                    |
+                                                    v
+                                             report-pdf-print  ──>  pdf
                                              (print)
+```
+
+```text
+general tmux request  ──>  tmux-router  ──>  tmux-layout
+                           (dispatch)          tmux-pane-control
+                                               tmux-agent-bridge
+                                               tmux-run-ops
+                                               tmux-snapshot
 ```
 
 ## Skills
 
-### `/pptx-refine` -- Document to Scenario
+### `/report-pptx` -- PPTX Workflow Router
+
+Routes broad report-to-slides requests to the right lower-level PPTX workflow.
+
+**Accepts:** presentation requests, report-to-slides requests, vague "PPTX 만들어줘" requests
+**Outputs:** the right `report-pptx-*` skill selection
+
+**Workflow:**
+1. **Route** -- choose `report-pptx-refine` when the user has source documents
+2. **Route** -- choose `report-pptx-generator` when the user already has `scenario.md`
+3. **Chain** -- use refine first, then generator for end-to-end slide creation
+
+### `/report-pptx-refine` -- Document to Scenario
 
 Takes various input documents and refines them into a structured slide scenario through analysis and user interview.
 
 **Accepts:** Markdown, text, outlines, meeting notes, CSV, existing .pptx, screenshots
-**Outputs:** `slide-scenario.md` ready for pptx-generator
+**Outputs:** `slide-scenario.md` ready for `report-pptx-generator`
 
 **Workflow:**
 1. **Collect** -- Gather all input files
@@ -55,7 +82,7 @@ Takes various input documents and refines them into a structured slide scenario 
 6. **Generate** -- Write scenario.md with frontmatter + slide sections
 7. **Handoff** -- Offer immediate PPTX generation or review first
 
-### `/pptx-generator` -- Scenario to PPTX
+### `/report-pptx-generator` -- Scenario to PPTX
 
 Generates editable .pptx from a scenario markdown file using python-pptx.
 
@@ -82,11 +109,11 @@ Coordinates shared report-generation workflows by composing the lower-level repo
 
 **Workflow:**
 1. **Choose** -- decide whether the task is HTML-only, PDF-only, or full pipeline
-2. **Compose** -- call `html-report` for layout and `pdf-print` for final PDF
+2. **Compose** -- call `report-html` for layout and `report-pdf-print` for final PDF
 3. **Integrate** -- keep repository-specific wrappers thin and config-driven
 4. **Verify** -- confirm output files and wrapper wiring
 
-### `/html-report` -- Markdown Report to HTML
+### `/report-html` -- Markdown Report to HTML
 
 Generates branded HTML reports from markdown source documents.
 
@@ -100,7 +127,7 @@ Generates branded HTML reports from markdown source documents.
 4. **Verify** -- inspect output files and optionally screenshot the cover
 5. **Integrate** -- keep repository-specific wrappers thin and forward to the shared renderer
 
-### `/pdf-print` -- HTML to PDF
+### `/report-pdf-print` -- HTML to PDF
 
 Prints existing HTML files or URLs to PDF with shared page settings, orientation, and footer control.
 
@@ -112,14 +139,93 @@ Prints existing HTML files or URLs to PDF with shared page settings, orientation
 2. **Configure** -- reuse page and footer settings from shared config when available
 3. **Print** -- run the Playwright-based PDF printer
 4. **Verify** -- inspect the generated PDF and compare against the HTML when layout matters
-5. **Pair** -- use this after `html-report` instead of re-implementing report layout in a second place
+5. **Pair** -- use this after `report-html` instead of re-implementing report layout in a second place
+
+### `/tmux-router` -- General Tmux Request Router
+
+Routes broad tmux requests to the right underlying tmux skill.
+
+**Accepts:** general tmux workspace, pane, localhost, and snapshot requests
+**Outputs:** the right `tmux-*` skill selection, optionally chaining more than one
+
+**Routing targets:**
+- `tmux-layout` -- workspace layout, window names, pane splits, default setup
+- `tmux-pane-control` -- inspect panes, send input, capture recent output
+- `tmux-agent-bridge` -- relay output from one pane to another for review or debate
+- `tmux-run-ops` -- run localhost services in `runs`, inspect ports, health-check, stop cleanly
+- `tmux-snapshot` -- save current tmux state to a text snapshot
+
+### `/tmux-layout` -- Standardize Tmux Layouts
+
+Creates or normalizes reusable tmux workspaces with named windows and predictable pane splits.
+
+**Accepts:** session names, root paths, requests like `agents/runs` layout or 2x2 pane structure
+**Outputs:** normalized tmux sessions with consistent windows and pane headers
+
+**Workflow:**
+1. **Inspect** -- list current tmux sessions, windows, and panes
+2. **Choose** -- decide whether to reuse a session or create a new one
+3. **Apply** -- create `agents` and `runs` windows with standard pane structure
+4. **Label** -- set pane-border headers using current path or fixed titles
+5. **Verify** -- confirm window names, pane counts, and pane paths
+
+### `/tmux-pane-control` -- Targeted Pane Actions
+
+Interacts with an existing tmux pane without changing the broader layout.
+
+**Accepts:** pane targets, short commands, prompt text, recent-output requests
+**Outputs:** pane listings, injected input, or bounded captured output
+
+**Workflow:**
+1. **Resolve** -- identify the right pane by index, path, title, or current command
+2. **Check** -- inspect current pane state before injecting input
+3. **Send** -- write text or commands to the pane deliberately
+4. **Capture** -- read only the most recent lines needed for the task
+
+### `/tmux-agent-bridge` -- Multi-Agent Handoffs
+
+Relays recent output from one tmux pane to another pane as a structured handoff.
+
+**Accepts:** source pane, target pane, instruction, recent-output line count
+**Outputs:** a review, critique, verification request, or summary prompt delivered to another agent pane
+
+**Workflow:**
+1. **Identify** -- choose source and target panes
+2. **Bound** -- capture only the recent output needed
+3. **Relay** -- paste structured context and an explicit instruction into the target pane
+4. **Follow up** -- capture the target pane's response if needed
+
+### `/tmux-run-ops` -- Localhost Run Window Operations
+
+Runs and controls local development services from dedicated tmux run panes.
+
+**Accepts:** target pane, working directory, run command, port number, localhost URL
+**Outputs:** started dev servers, port ownership info, health-check results, clean stops
+
+**Workflow:**
+1. **Check** -- verify whether a target port is already in use
+2. **Start** -- run the server in an explicit `runs` pane
+3. **Verify** -- health-check the localhost endpoint
+4. **Stop** -- terminate the listener on a port when requested
+
+### `/tmux-snapshot` -- Save Current Tmux State
+
+Writes the current tmux inventory to a plain-text snapshot file.
+
+**Accepts:** optional session filter and output path
+**Outputs:** snapshot text with sessions, windows, panes, commands, paths, and geometry
+
+**Workflow:**
+1. **Scope** -- capture one session or all sessions
+2. **Record** -- write session, window, and pane metadata to a file
+3. **Reuse** -- inspect or manually reconstruct a workspace later from the snapshot
 
 ## Template Inspector
 
 The `pptx_inspector.py` analyzes any `.pptx` template and extracts everything AI needs to generate on-brand presentations -- similar to how Beautiful.ai or Gamma analyze your uploaded templates.
 
 ```bash
-python3 pptx/pptx-generator/pptx_inspector.py your-template.pptx
+python3 reports/report-pptx-generator/pptx_inspector.py your-template.pptx
 ```
 
 **Extracts:**
@@ -219,7 +325,7 @@ right:
     Automated dashboard with real-time data.
 ```
 
-See [`pptx/pptx-generator/example/scenario-template.md`](pptx/pptx-generator/example/scenario-template.md) for the full format reference with all 8 layout types.
+See [`report-pptx-generator/example/scenario-template.md`](reports/report-pptx-generator/example/scenario-template.md) for the full format reference with all 8 layout types.
 
 ### Supported Layouts
 
@@ -291,7 +397,7 @@ A bundled sample template (`sample-template.pptx`) demonstrates the full pipelin
 
 Generate it yourself:
 ```bash
-cd pptx-generator/example
+cd reports/report-pptx-generator/example
 python3 create_sample_template.py   # creates sample-template.pptx
 python3 ../pptx_inspector.py sample-template.pptx  # verify theme extraction
 ```
@@ -306,26 +412,38 @@ Or bring your own `template.pptx` -- the inspector handles any PowerPoint templa
 pip install python-pptx lxml
 ```
 
-### Register as Codex Skills
+### Register Report Skills
+
+```bash
+bash reports/scripts/install_shared_report_skills.sh
+```
+
+Use `--dry-run`, `--skip-claude`, or `--skip-codex` when needed.
+
+### Manual Registration For Codex
 
 ```bash
 # Clone
 git clone https://github.com/cyanluna-git/cyanluna.tools.git ~/Dev/skills/cyanluna.tools
 
 # Register skills (symlink to Codex skills directory)
-ln -s ~/Dev/skills/cyanluna.tools/pptx/pptx-generator ~/.codex/skills/pptx-generator
-ln -s ~/Dev/skills/cyanluna.tools/pptx/pptx-refine ~/.codex/skills/pptx-refine
 ln -s ~/Dev/skills/cyanluna.tools/reports/report-pipeline ~/.codex/skills/report-pipeline
-ln -s ~/Dev/skills/cyanluna.tools/reports/html-report ~/.codex/skills/html-report
-ln -s ~/Dev/skills/cyanluna.tools/reports/pdf-print ~/.codex/skills/pdf-print
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-html ~/.codex/skills/report-html
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pdf-print ~/.codex/skills/report-pdf-print
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pptx ~/.codex/skills/report-pptx
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pptx-refine ~/.codex/skills/report-pptx-refine
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pptx-generator ~/.codex/skills/report-pptx-generator
 ```
 
-### Register as Claude Skills
+### Manual Registration For Claude
 
 ```bash
 ln -s ~/Dev/skills/cyanluna.tools/reports/report-pipeline ~/.claude/skills/report-pipeline
-ln -s ~/Dev/skills/cyanluna.tools/reports/html-report ~/.claude/skills/html-report
-ln -s ~/Dev/skills/cyanluna.tools/reports/pdf-print ~/.claude/skills/pdf-print
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-html ~/.claude/skills/report-html
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pdf-print ~/.claude/skills/report-pdf-print
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pptx ~/.claude/skills/report-pptx
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pptx-refine ~/.claude/skills/report-pptx-refine
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pptx-generator ~/.claude/skills/report-pptx-generator
 ```
 
 ### Verify
@@ -333,14 +451,14 @@ ln -s ~/Dev/skills/cyanluna.tools/reports/pdf-print ~/.claude/skills/pdf-print
 ```bash
 # Helper library
 python3 -c "
-import sys; sys.path.insert(0, 'pptx/pptx-generator')
+import sys; sys.path.insert(0, 'reports/report-pptx-generator')
 from pptx_helper import *
 print('pptx_helper OK')
 print('hex_to_rgb:', hex_to_rgb('#054E5A'))
 "
 
 # Inspector (optional — only needed if using templates)
-python3 pptx/pptx-generator/pptx_inspector.py --help 2>/dev/null || echo "Usage: python3 pptx_inspector.py <template.pptx> [--json]"
+python3 reports/report-pptx-generator/pptx_inspector.py --help 2>/dev/null || echo "Usage: python3 pptx_inspector.py <template.pptx> [--json]"
 ```
 
 ## Project Structure
@@ -348,28 +466,34 @@ python3 pptx/pptx-generator/pptx_inspector.py --help 2>/dev/null || echo "Usage:
 ```text
 cyanluna.tools/
 ├── README.md
-├── pptx/
-│   ├── pptx-generator/
-│   │   ├── SKILL.md
-│   │   ├── pptx_helper.py
-│   │   ├── pptx_inspector.py
-│   │   └── example/
-│   └── pptx-refine/
-│       └── SKILL.md
 ├── reports/
 │   ├── report-pipeline/
 │   │   ├── SKILL.md
 │   │   └── agents/
-│   ├── html-report/
+│   ├── report-html/
 │   │   ├── SKILL.md
 │   │   ├── scripts/
 │   │   ├── references/
 │   │   └── agents/
-│   └── pdf-print/
+│   ├── report-pdf-print/
 │       ├── SKILL.md
 │       ├── scripts/
 │       ├── references/
 │       └── agents/
+│   ├── report-pptx/
+│   │   ├── SKILL.md
+│   │   └── agents/
+│   ├── report-pptx-refine/
+│   │   ├── SKILL.md
+│   │   └── agents/
+│   ├── report-pptx-generator/
+│   │   ├── SKILL.md
+│   │   ├── agents/
+│   │   ├── pptx_helper.py
+│   │   ├── pptx_inspector.py
+│   │   └── example/
+│   └── scripts/
+│       └── install_shared_report_skills.sh
 └── workthrough/
 ```
 

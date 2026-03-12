@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report PPTX Generator"
+  short_description: "Generate editable PPTX from a scenario markdown"
+  default_prompt: "Use $report-pptx-generator to render an editable PPTX from a slide scenario markdown file, with optional template and screenshots."

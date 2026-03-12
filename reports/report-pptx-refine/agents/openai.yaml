@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report PPTX Refine"
+  short_description: "Refine source materials into a slide scenario"
+  default_prompt: "Use $report-pptx-refine to turn reports, notes, or mixed source materials into a structured scenario markdown for PPTX generation."

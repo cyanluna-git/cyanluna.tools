@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tmux Pane Control"
+  short_description: "Send input to panes and capture pane output"
+  default_prompt: "Use $tmux-pane-control to inspect tmux panes, send input to a specific pane, or capture recent terminal output safely."

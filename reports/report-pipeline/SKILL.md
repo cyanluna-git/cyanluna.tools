@@ -1,6 +1,6 @@
 ---
 name: report-pipeline
-description: Coordinate reusable markdown-report workflows by composing html-report and pdf-print, and set up thin repository wrappers/configs around those shared skills. Use when the user wants an end-to-end report pipeline, such as markdown to branded HTML plus PDF, shared report-generation setup for a repository, or a repeatable reporting workflow that should stay modular instead of duplicating renderer logic.
+description: Coordinate reusable markdown-report workflows by composing report-html and report-pdf-print, and set up thin repository wrappers/configs around those shared skills. Use when the user wants an end-to-end report pipeline, such as markdown to branded HTML plus PDF, shared report-generation setup for a repository, or a repeatable reporting workflow that should stay modular instead of duplicating renderer logic.
 ---
 
 # Report Pipeline
@@ -11,8 +11,8 @@ Use this skill when the task is bigger than a single render step:
 - reusable wrapper/config design around the shared report skills
 
 If the user only needs one stage, use the lower-level skill directly:
-- `$html-report` for markdown to HTML
-- `$pdf-print` for HTML to PDF
+- `$report-html` for markdown to HTML
+- `$report-pdf-print` for HTML to PDF
 
 ## Workflow
 
@@ -20,9 +20,9 @@ If the user only needs one stage, use the lower-level skill directly:
 
 Use this decision rule:
 
-- Source is markdown and output is HTML only: use `$html-report`
-- Source is markdown and output is HTML plus PDF: use `$html-report`, then `$pdf-print`
-- Source is already HTML or a URL and output is PDF only: use `$pdf-print`
+- Source is markdown and output is HTML only: use `$report-html`
+- Source is markdown and output is HTML plus PDF: use `$report-html`, then `$report-pdf-print`
+- Source is already HTML or a URL and output is PDF only: use `$report-pdf-print`
 - Source is a repository request like "set up report generation here": use this skill and wire the lower-level skills together with config and a thin wrapper
 
 This skill exists to keep those choices consistent.
@@ -31,27 +31,27 @@ This skill exists to keep those choices consistent.
 
 Follow these ownership rules:
 
-- `$html-report` owns report layout, branding, and print-aware HTML/CSS
-- `$pdf-print` owns final PDF printing from existing HTML
+- `$report-html` owns report layout, branding, and print-aware HTML/CSS
+- `$report-pdf-print` owns final PDF printing from existing HTML
 - project wrappers own only repository-specific defaults such as config path, logo path, and output naming
 
 Do not duplicate the report renderer inside a repository wrapper.
-Do not move report layout logic into `$pdf-print`.
+Do not move report layout logic into `$report-pdf-print`.
 
 ## Standard Flows
 
 ### Markdown to HTML and PDF
 
 1. Identify the source markdown and optional branding inputs
-2. Generate HTML through `$html-report`
-3. Print the generated HTML through `$pdf-print`
+2. Generate HTML through `$report-html`
+3. Print the generated HTML through `$report-pdf-print`
 4. Verify both outputs
 
 Conceptually:
 
 ```bash
-node reports/html-report/scripts/render_html_report.cjs report.md --config report-config.json
-node reports/pdf-print/scripts/print_to_pdf.cjs report.html --config report-config.json
+node reports/report-html/scripts/render_html_report.cjs report.md --config report-config.json
+node reports/report-pdf-print/scripts/print_to_pdf.cjs report.html --config report-config.json
 ```
 
 ### Repository Integration

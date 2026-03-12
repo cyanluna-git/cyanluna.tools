@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tmux Agent Bridge"
+  short_description: "Relay prompts and context between tmux agent panes"
+  default_prompt: "Use $tmux-agent-bridge to relay recent output from one tmux pane to another so a second agent can review, verify, or extend the first agent's work."

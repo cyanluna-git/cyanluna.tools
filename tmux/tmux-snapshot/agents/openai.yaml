@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tmux Snapshot"
+  short_description: "Save the current tmux state to a snapshot file"
+  default_prompt: "Use $tmux-snapshot to capture the current tmux sessions, windows, panes, paths, and commands into a reusable snapshot file."

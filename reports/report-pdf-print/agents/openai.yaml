@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report PDF Print"
+  short_description: "Print HTML files to PDF with Playwright"
+  default_prompt: "Use $report-pdf-print to turn this HTML file or URL into a printable PDF with the right paper size, orientation, and footer."

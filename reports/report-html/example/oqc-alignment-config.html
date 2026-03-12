@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OQC Project Alignment</title>
+    <style>
+      :root {
+        --primary: #054E5A;
+        --primary-l: #0A6E7E;
+        --gray: #A1A9B4;
+        --gray-light: #DFE4E7;
+        --gray-bg: #F4F6F8;
+        --gold: #E1B77E;
+        --gold-dark: #C89B5E;
+        --sage: #5D7875;
+        --navy: #123F6D;
+        --navy-dark: #06315B;
+        --coral: #F68363;
+        --white: #FFFFFF;
+        --text: #2C3E50;
+        --text-light: #5A6A7A;
+        --success: #27AE60;
+        --danger: #E74C3C;
+        --warning: #F39C12;
+        --shadow: 0 22px 54px rgba(6, 49, 91, 0.10);
+        --page-glow: rgba(10, 110, 126, 0.15);
+        --page-bg-start: #eef3f5;
+        --page-bg-end: #e6ecef;
+        --cover-dark: #043A44;
+        --cover-glow: rgba(225,183,126,0.18);
+        --cover-panel-end: #edf2f5;
+        --cover-grid-dot: rgba(161,169,180,0.28);
+        --cover-summary-shadow: rgba(18, 63, 109, 0.08);
+        --logo-shadow: rgba(0,0,0,0.12);
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        background:
+          radial-gradient(circle at top left, var(--page-glow), transparent 24rem),
+          linear-gradient(180deg, var(--page-bg-start) 0%, var(--page-bg-end) 100%);
+        color: var(--text);
+        font-family: "Segoe UI", "Noto Sans KR", "Pretendard", system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        padding: 32px;
+      }
+
+      .report-shell {
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+
+      .page {
+        position: relative;
+        background: var(--white);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        margin-bottom: 28px;
+        overflow: hidden;
+      }
+
+      .page::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 8px;
+        background: linear-gradient(90deg, var(--primary) 0%, var(--primary-l) 45%, var(--gold) 100%);
+      }
+
+      .page-inner {
+        padding: 42px 44px 40px;
+      }
+
+      .cover {
+        background: linear-gradient(180deg, var(--white) 0%, #fbfcfd 100%);
+      }
+
+      .cover-hero {
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        min-height: 460px;
+      }
+
+      .cover-left {
+        position: relative;
+        padding: 52px 42px 44px;
+        background: linear-gradient(180deg, var(--cover-dark) 0%, var(--primary) 46%, var(--primary-l) 100%);
+        color: var(--white);
+      }
+
+      .cover-left::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 6px;
+        background: linear-gradient(180deg, var(--gold) 0%, rgba(225,183,126,0) 65%);
+      }
+
+      .cover-left::after {
+        content: "";
+        position: absolute;
+        right: -120px;
+        bottom: -120px;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        border: 1px solid rgba(225,183,126,0.12);
+      }
+
+      .brand {
+        color: var(--gold);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      .brand-lockup {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .brand-logo {
+        width: 190px;
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 6px 12px var(--logo-shadow));
+      }
+
+      .brand-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-top: 8px;
+      }
+
+      .doc-type {
+        display: inline-flex;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: rgba(255,255,255,0.88);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .department-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255,255,255,0.82);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.5;
+      }
+
+      .department-line strong {
+        color: var(--white);
+        font-weight: 700;
+      }
+
+      .cover-left h1 {
+        margin: 44px 0 18px;
+        font-size: 42px;
+        line-height: 1.12;
+        letter-spacing: -0.04em;
+      }
+
+      .cover-intro p {
+        margin: 0 0 12px;
+        color: rgba(255,255,255,0.78);
+        font-size: 16px;
+        line-height: 1.72;
+      }
+
+      .cover-divider {
+        width: 70px;
+        height: 4px;
+        margin: 18px 0 22px;
+        border-radius: 999px;
+        background: var(--gold);
+      }
+
+      .cover-left-footer {
+        position: absolute;
+        left: 42px;
+        bottom: 38px;
+        color: rgba(255,255,255,0.52);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .cover-right {
+        position: relative;
+        padding: 52px 44px 40px;
+        background:
+          radial-gradient(circle at top right, var(--cover-glow), transparent 18rem),
+          linear-gradient(180deg, var(--gray-bg) 0%, var(--cover-panel-end) 100%);
+      }
+
+      .cover-right::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(var(--cover-grid-dot) 1px, transparent 1px);
+        background-size: 22px 22px;
+        opacity: 0.26;
+        pointer-events: none;
+      }
+
+      .cover-panel {
+        position: relative;
+        z-index: 1;
+      }
+
+      .section-tag {
+        color: var(--gray);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+
+      .cover-summary {
+        background: rgba(255,255,255,0.92);
+        border-radius: 16px;
+        border-left: 4px solid var(--gold);
+        padding: 20px 22px;
+        box-shadow: 0 10px 28px var(--cover-summary-shadow);
+      }
+
+      .cover-summary p {
+        margin: 0 0 12px;
+        font-size: 15px;
+        line-height: 1.72;
+        color: var(--text);
+      }
+
+      .cover-summary p:last-child {
+        margin-bottom: 0;
+      }
+
+      .cover-chip-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .cover-chip {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: rgba(5, 78, 90, 0.08);
+        border: 1px solid rgba(5, 78, 90, 0.10);
+        color: var(--navy-dark);
+        font-size: 13px;
+        line-height: 1.55;
+        font-weight: 700;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        padding: 24px 44px 40px;
+        background: var(--white);
+      }
+
+      .meta-card,
+      .stat-card,
+      .highlight-card,
+      .timeline-card,
+      .subcard {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--gray-light);
+      }
+
+      .meta-card {
+        padding: 18px 18px 20px;
+      }
+
+      .meta-card:nth-child(1) { border-top: 4px solid var(--primary); }
+      .meta-card:nth-child(2) { border-top: 4px solid var(--gold); }
+      .meta-card:nth-child(3) { border-top: 4px solid var(--sage); }
+
+      .meta-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-bottom: 10px;
+      }
+
+      .meta-value {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.45;
+        color: var(--navy-dark);
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: flex-start;
+        margin-bottom: 24px;
+      }
+
+      .page-kicker {
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+
+      .page-title {
+        margin: 0;
+        color: var(--navy-dark);
+        font-size: 34px;
+        line-height: 1.18;
+        letter-spacing: -0.03em;
+      }
+
+      .page-title-bar {
+        width: 82px;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--gold);
+        margin-top: 10px;
+      }
+
+      .page-note {
+        max-width: 320px;
+        color: var(--text-light);
+        font-size: 15px;
+        line-height: 1.66;
+      }
+
+      .toc {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 28px;
+      }
+
+      .toc li {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--gray-light);
+      }
+
+      .toc-index {
+        min-width: 28px;
+        color: var(--coral);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .toc-title {
+        color: var(--text);
+        font-size: 17px;
+        line-height: 1.48;
+      }
+
+      .section-heading {
+        margin-bottom: 18px;
+      }
+
+      .section-kicker {
+        display: inline-flex;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(5, 78, 90, 0.08);
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .report-section h2 {
+        margin: 14px 0 0;
+        color: var(--navy-dark);
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: -0.03em;
+      }
+
+      .section-body p,
+      .subcard p {
+        margin: 0 0 14px;
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.76;
+      }
+
+      .report-list {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .report-list > li {
+        margin: 0 0 10px;
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .report-list > li::marker {
+        color: var(--primary);
+      }
+
+      .list-continuation {
+        margin-top: 8px;
+        color: var(--text-light);
+      }
+
+      .stats-grid,
+      .highlight-grid,
+      .timeline-grid,
+      .subcard-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-bottom: 18px;
+      }
+
+      .stat-card,
+      .highlight-card,
+      .timeline-card,
+      .subcard {
+        padding: 22px;
+      }
+
+      .stat-card:nth-child(1) { border-top: 4px solid var(--primary); }
+      .stat-card:nth-child(2) { border-top: 4px solid var(--gold); }
+      .stat-card:nth-child(3) { border-top: 4px solid var(--sage); }
+
+      .stat-value {
+        color: var(--navy-dark);
+        font-size: 36px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin-bottom: 6px;
+      }
+
+      .stat-label {
+        color: var(--text-light);
+        font-size: 14px;
+      }
+
+      .highlight-card {
+        background: linear-gradient(180deg, #ffffff 0%, #fafcfd 100%);
+      }
+
+      .highlight-card:nth-child(1) { border-left: 4px solid var(--primary); }
+      .highlight-card:nth-child(2) { border-left: 4px solid var(--gold); }
+
+      .highlight-card h3,
+      .timeline-card h3,
+      .subcard h3 {
+        margin: 0 0 12px;
+        color: var(--navy-dark);
+        font-size: 18px;
+        letter-spacing: -0.02em;
+      }
+
+      .highlight-card ul,
+      .timeline-card ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .highlight-card li,
+      .timeline-card li {
+        margin-bottom: 10px;
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.68;
+      }
+
+      .timeline-card:nth-child(4n + 1) { border-top: 4px solid var(--primary); }
+      .timeline-card:nth-child(4n + 2) { border-top: 4px solid var(--gold); }
+      .timeline-card:nth-child(4n + 3) { border-top: 4px solid var(--sage); }
+      .timeline-card:nth-child(4n + 4) { border-top: 4px solid var(--coral); }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 20px;
+      }
+
+      .subcard-grid {
+        margin-top: 18px;
+      }
+
+      .chip-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(93, 120, 117, 0.10);
+        color: var(--sage);
+        border: 1px solid rgba(93, 120, 117, 0.18);
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .source {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 16px 44px 28px;
+        border-top: 1px solid var(--gray-light);
+        color: var(--gray);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      code {
+        background: rgba(18, 63, 109, 0.08);
+        border-radius: 6px;
+        padding: 2px 6px;
+        font-size: 0.92em;
+      }
+
+      strong {
+        color: var(--navy-dark);
+      }
+
+      @media print {
+        body {
+          padding: 0;
+          background: #ffffff;
+        }
+
+        .report-shell {
+          max-width: none;
+        }
+
+        .page {
+          border-radius: 0;
+          box-shadow: none;
+          margin: 0 0 14px;
+          page-break-after: always;
+          break-after: page;
+        }
+
+        .page:last-child {
+          page-break-after: auto;
+          break-after: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="report-shell">
+      <section class="page cover">
+        <div class="cover-hero">
+          <div class="cover-left">
+            <div class="brand-lockup">
+              <img class="brand-logo" src="file:///home/edwards/Dev/edwards.oqc.infra/apps/server-frontend/public/edwards-logo.png" alt="Brand logo" />
+              <div class="brand-copy">
+                <div class="brand">OQC Project Report</div>
+                <div class="doc-type">PM Alignment and Stakeholder Brief</div>
+                <div class="department-line">
+                         <span>Department</span>
+                         <strong>PCAS IS Software Team</strong>
+                       </div>
+              </div>
+            </div>
+            <h1>OQC Project Alignment</h1>
+            <div class="cover-divider"></div>
+            <div class="cover-intro"></div>
+            <div class="cover-left-footer">
+              <div>Prepared as a printable HTML/PDF report</div>
+              <div>2026-03-12-pm-alignment-confluence-en.md</div>
+            </div>
+          </div>
+          <div class="cover-right">
+            <div class="cover-panel">
+              <div class="section-tag">Operating Model</div>
+              <div class="cover-summary"><p>This document is intended to align the OQC project on current status, the April 2026 pilot target, the operating model, expectations from PM support, and the minimum reporting structure required for effective delivery management. At this stage, the project is better served by short execution-validation-replanning loops than by a traditional long-cycle sprint model. The goal of this document is therefore not only to align on Scrum ceremonies, but to align on the actual delivery model and decision-making structure needed for the current phase.</p></div>
+              <div class="cover-chip-list">
+                <div class="cover-chip">- <strong>Target pilot deployment window:</strong> the second week of April 2026 - More specifically, the target is to be ready around the weeks of <strong>April 6, 2026</strong> or <strong>April 13, 2026</strong>.</div><div class="cover-chip">- Product targets: <strong>Gen2</strong> and <strong>Gen4</strong> - Goal: provide a pilot-ready flow suitable for real operational validation - Automation focus: <strong>Pump Automation Test</strong></div><div class="cover-chip">Pilot target and acceptance criteria</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-value">March 12, 2026</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Purpose</div>
+            <div class="meta-value">Alignment document for PM discussion and stakeholder sharing</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Audience</div>
+            <div class="meta-value">Project Manager, Gerald, key stakeholders</div>
+          </div>
+        </div>
+        <div class="source">
+          <div>Source: 2026-03-12-pm-alignment-confluence-en.md</div>
+          <div>Prepared as a printable HTML/PDF report</div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="page-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-kicker">Contents</div>
+              <h2 class="page-title">Reading Flow and Key Decisions</h2>
+              <div class="page-title-bar"></div>
+            </div>
+            <div class="page-note">This print layout aligns current status, pilot criteria, operating model, PM expectations, and reporting needs in one management-ready brief.</div>
+          </div>
+          <ul class="toc">
+        <li>
+          <span class="toc-index">01</span>
+          <span class="toc-title">1. Purpose of This Document</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">02</span>
+          <span class="toc-title">2. Current Project Status</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">03</span>
+          <span class="toc-title">3. Pilot Objective</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">04</span>
+          <span class="toc-title">4. Definition of MVP / Pilot</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">05</span>
+          <span class="toc-title">5. Current Operating Model</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">06</span>
+          <span class="toc-title">6. Proposed Roadmap</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">07</span>
+          <span class="toc-title">7. What I Need from the PM</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">08</span>
+          <span class="toc-title">8. Reporting Needed</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">09</span>
+          <span class="toc-title">9. Recommended Governance Rhythm</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">10</span>
+          <span class="toc-title">10. Report Audience</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">11</span>
+          <span class="toc-title">11. Key Alignment Message</span>
+        </li>
+      
+        <li>
+          <span class="toc-index">12</span>
+          <span class="toc-title">12. Suggested Confluence Page Title</span>
+        </li>
+      </ul>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="page-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-kicker">Snapshot</div>
+              <h2 class="page-title">Current Status and Pilot Gate</h2>
+              <div class="page-title-bar"></div>
+            </div>
+            <div class="page-note">The immediate objective is not long-cycle planning. It is to secure enough stability and integration completeness to run a meaningful pilot.</div>
+          </div>
+          <div class="stats-grid">
+                  
+                        <article class="stat-card">
+                          <div class="stat-value">90</div>
+                          <div class="stat-label">done</div>
+                        </article>
+                      
+                        <article class="stat-card">
+                          <div class="stat-value">1</div>
+                          <div class="stat-label">in implementation review</div>
+                        </article>
+                      
+                        <article class="stat-card">
+                          <div class="stat-value">21</div>
+                          <div class="stat-label">in todo</div>
+                        </article>
+                      
+                </div>
+          <div class="highlight-grid">
+            <article class="highlight-card">
+              <h3>Core Capabilities in Place</h3>
+              <ul>
+                <li>Edge-based inspection execution workflow</li><li>Combined support for manual, semi-automatic, and automatic execution modes</li><li>FT&amp;CC catalog and scenario-driven execution structure</li><li>Authentication and user access control foundation</li><li>Traceability and evidence-handling foundation for inspection results</li>
+              </ul>
+            </article>
+            <article class="highlight-card">
+              <h3>Pilot Objective and Scope</h3>
+              <ul>
+                <li>Product targets: <strong>Gen2</strong> and <strong>Gen4</strong></li><li>Goal: provide a pilot-ready flow suitable for real operational validation</li><li>Automation focus: <strong>Pump Automation Test</strong></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="page-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-kicker">Roadmap</div>
+              <h2 class="page-title">Roadmap to the April Pilot</h2>
+              <div class="page-title-bar"></div>
+            </div>
+            <div class="page-note">The right management view for this phase is milestone completion and integration risk, not an over-detailed sprint forecast.</div>
+          </div>
+          <div class="timeline-grid">
+            
+                  <article class="timeline-card">
+                    <h3>Phase A. Stabilize the current core flow</h3>
+                    <p><strong>Target period:</strong> mid-March 2026</p>
+<ul class="report-list"><li>Improve DOCX report completeness and quality</li><li>Close immediate login and deployment stabilization items</li><li>Remove inspection UX friction that directly affects pilot operators</li></ul>
+                  </article>
+                
+                  <article class="timeline-card">
+                    <h3>Phase B. Pilot-readiness integration</h3>
+                    <p><strong>Target period:</strong> late March 2026</p>
+<ul class="report-list"><li>Harden edge-to-server synchronization</li><li>Validate evidence / file synchronization behavior</li><li>Validate the server-to-edge catalog or Gherkin deployment path</li><li>Run integrated verification of the main end-to-end execution flow</li></ul>
+                  </article>
+                
+                  <article class="timeline-card">
+                    <h3>Phase C. Pilot validation</h3>
+                    <p><strong>Target period:</strong> early April 2026</p>
+<ul class="report-list"><li>Validate pilot operating scenarios for Gen2 and Gen4</li><li>Confirm that an ME engineer can complete one full manual test loop independently</li><li>Validate the Pump Automation Test demonstration</li><li>Confirm the pilot reporting package and operating checklist</li></ul>
+                  </article>
+                
+                  <article class="timeline-card">
+                    <h3>Phase D. Pilot deployment</h3>
+                    <p><strong>Target period:</strong> second week of April 2026</p>
+<ul class="report-list"><li>Deploy the pilot-ready version for Gen2 and Gen4</li><li>Support initial pilot operation</li><li>Capture real usage issues and next-phase improvement items</li></ul>
+                  </article>
+                
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="page-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-kicker">Operating Model</div>
+              <h2 class="page-title">Operating Rhythm, PM Role, and Reporting</h2>
+              <div class="page-title-bar"></div>
+            </div>
+            <div class="page-note">The PM focus should stay on milestones, risk, dependencies, and stakeholder alignment rather than fine-grained micro-task control.</div>
+          </div>
+          <div class="two-column">
+            <article class="subcard">
+              <h3>Expected PM Support</h3>
+              <ul class="report-list">
+                <li>Maintain stakeholder alignment on pilot scope, priorities, and tradeoffs</li><li>Manage schedule tracking</li><li>Support Scrum ceremonies where useful</li><li>Identify requirement gaps or blind spots that Gerald may not have explicitly surfaced yet</li><li>Convert external asks into decision-ready discussions</li><li>Track dependencies, risks, and follow-up actions</li><li>Maintain milestone-level visibility</li>
+              </ul>
+            </article>
+            <article class="subcard">
+              <h3>Essential Reporting Set</h3>
+              <ul class="report-list">
+                <li><strong>Pilot Readiness Report</strong></li><li>Current milestone</li><li>Remaining critical scope</li><li>Top risks</li><li>Blockers affecting the April pilot</li><li><strong>Committed vs. Delivered Report</strong></li><li>Measured at the theme or milestone level, not at the micro-story level</li><li>What was intended in the last review window</li><li>What was actually delivered</li><li>What changed and why</li><li><strong>Risk / Dependency Log</strong></li><li>Schedule risks</li><li>External dependencies</li><li>Open decisions</li><li>Owners and target dates</li><li><strong>Decision Log</strong></li><li>Key product or delivery decisions</li><li>Why the decision was made</li><li>Impact on timeline, scope, or architecture</li><li><strong>Gap / Requirement Watchlist</strong></li><li>Requirements that may still be missing from the current plan or implementation</li><li>Operational gaps that must be checked before pilot</li>
+              </ul>
+            </article>
+          </div>
+          <div class="chip-list">
+            <span class="chip">Pilot target and acceptance criteria</span><span class="chip">Milestone-level roadmap</span><span class="chip">Key risks and external dependencies</span><span class="chip">Clear status visibility for stakeholders</span>
+          </div>
+        </div>
+      </section>
+
+      
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>1. Purpose of This Document</h2>
+      </div>
+      <div class="section-body"><p>This document is intended to align the OQC project on current status, the April 2026 pilot target, the operating model, expectations from PM support, and the minimum reporting structure required for effective delivery management.</p>
+<p>At this stage, the project is better served by short execution-validation-replanning loops than by a traditional long-cycle sprint model. The goal of this document is therefore not only to align on Scrum ceremonies, but to align on the actual delivery model and decision-making structure needed for the current phase.</p></div>
+      
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>2. Current Project Status</h2>
+      </div>
+      <div class="section-body"><p>As of March 12, 2026, the OQC project has already established a substantial functional base and is now moving from core feature construction into pilot-readiness hardening and integration completion.</p></div>
+      <div class="subcard-grid">
+        <article class="subcard">
+          <h3>Current execution snapshot</h3>
+          <ul class="report-list"><li>Kanban status: <strong>90 done</strong>, <strong>1 in implementation review</strong>, <strong>21 in todo</strong></li><li>Recent major completions:<ul class="report-list"><li>Local authentication backend</li><li>Login UX redesigned to support local ID/password first, with SSO as an optional path</li><li>OQC remote deployment automation and server-frontend redeployment</li><li>Key FT&amp;CC inspection UX improvements</li></ul><li>Current in-flight item:<ul class="report-list"><li>DOCX report enhancement: add overall statistics chart section</li></ul></ul>
+        </article>
+      
+        <article class="subcard">
+          <h3>Core capabilities already in place</h3>
+          <ul class="report-list"><li>Edge-based inspection execution workflow</li><li>Combined support for manual, semi-automatic, and automatic execution modes</li><li>FT&amp;CC catalog and scenario-driven execution structure</li><li>Authentication and user access control foundation</li><li>Traceability and evidence-handling foundation for inspection results</li></ul>
+        </article>
+      </div>
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>3. Pilot Objective</h2>
+      </div>
+      
+      <div class="subcard-grid">
+        <article class="subcard">
+          <h3>Target timing</h3>
+          <ul class="report-list"><li><strong>Target pilot deployment window:</strong> the second week of April 2026</li><li>More specifically, the target is to be ready around the weeks of <strong>April 6, 2026</strong> or <strong>April 13, 2026</strong>.</li></ul>
+        </article>
+      
+        <article class="subcard">
+          <h3>Target scope</h3>
+          <ul class="report-list"><li>Product targets: <strong>Gen2</strong> and <strong>Gen4</strong></li><li>Goal: provide a pilot-ready flow suitable for real operational validation</li><li>Automation focus: <strong>Pump Automation Test</strong></li></ul>
+        </article>
+      </div>
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>4. Definition of MVP / Pilot</h2>
+      </div>
+      <div class="section-body"><p>For this project, MVP at this stage does not mean a broad feature-complete platform. It means the minimum stable level required to operate a meaningful pilot.</p></div>
+      <div class="subcard-grid">
+        <article class="subcard">
+          <h3>Pilot acceptance criteria</h3>
+          
+        </article>
+      
+        <article class="subcard">
+          <h3>A. Manual operation baseline</h3>
+          <ul class="report-list"><li>An <strong>ME engineer must be able to complete one full loop of a 100% manual test independently</strong></li><li>This is the baseline condition for pilot operation, with continuous improvement expected afterward</li></ul>
+        </article>
+      
+        <article class="subcard">
+          <h3>B. Automation demonstration baseline</h3>
+          <p>The Pump Automation Test should be able to demonstrate:</p>
+<ul class="report-list"><li>Automatic start / stop of the pump</li><li>Acquisition of relevant sensor data</li><li>Pass / fail judgment based on collected values</li></ul>
+<p>This automation does not need to be perfect at the pilot stage. A meaningful and executable demonstration is sufficient.</p>
+        </article>
+      
+        <article class="subcard">
+          <h3>Items that are not the priority for MVP</h3>
+          <ul class="report-list"><li>Full enterprise-level process formalization</li><li>Detailed long-cycle forecasting for every micro-feature</li><li>Heavy administrative overhead for very small implementation slices</li></ul>
+        </article>
+      </div>
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>5. Current Operating Model</h2>
+      </div>
+      <div class="section-body"><p>The project is currently running in a very short feedback loop between design and implementation.</p></div>
+      <div class="subcard-grid">
+        <article class="subcard">
+          <h3>Operating characteristics</h3>
+          <ul class="report-list"><li>Gerald and Bipin are directly planning and implementing inside short feedback cycles</li><li>Small functional slices are handled directly as Kanban cards rather than expanded into full stories</li><li>The effective detailed planning horizon is typically <strong>1-3 days</strong></li><li>For this phase, <strong>milestone-based alignment plus short-horizon execution control</strong> is more suitable than a detailed two-week planning model</li></ul>
+<p>This is not a lack of planning. It is planning at the level that best fits the current product-shaping phase.</p>
+        </article>
+      </div>
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>6. Proposed Roadmap</h2>
+      </div>
+      
+      <div class="subcard-grid">
+        <article class="subcard">
+          <h3>Phase A. Stabilize the current core flow</h3>
+          <p><strong>Target period:</strong> mid-March 2026</p>
+<ul class="report-list"><li>Improve DOCX report completeness and quality</li><li>Close immediate login and deployment stabilization items</li><li>Remove inspection UX friction that directly affects pilot operators</li></ul>
+        </article>
+      
+        <article class="subcard">
+          <h3>Phase B. Pilot-readiness integration</h3>
+          <p><strong>Target period:</strong> late March 2026</p>
+<ul class="report-list"><li>Harden edge-to-server synchronization</li><li>Validate evidence / file synchronization behavior</li><li>Validate the server-to-edge catalog or Gherkin deployment path</li><li>Run integrated verification of the main end-to-end execution flow</li></ul>
+        </article>
+      
+        <article class="subcard">
+          <h3>Phase C. Pilot validation</h3>
+          <p><strong>Target period:</strong> early April 2026</p>
+<ul class="report-list"><li>Validate pilot operating scenarios for Gen2 and Gen4</li><li>Confirm that an ME engineer can complete one full manual test loop independently</li><li>Validate the Pump Automation Test demonstration</li><li>Confirm the pilot reporting package and operating checklist</li></ul>
+        </article>
+      
+        <article class="subcard">
+          <h3>Phase D. Pilot deployment</h3>
+          <p><strong>Target period:</strong> second week of April 2026</p>
+<ul class="report-list"><li>Deploy the pilot-ready version for Gen2 and Gen4</li><li>Support initial pilot operation</li><li>Capture real usage issues and next-phase improvement items</li></ul>
+        </article>
+      </div>
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>7. What I Need from the PM</h2>
+      </div>
+      <div class="section-body"><p>At this stage, the most valuable PM contribution is not fine-grained Scrum administration on small implementation items. The higher-value role is external alignment, risk management, and structured support around execution gaps.</p></div>
+      <div class="subcard-grid">
+        <article class="subcard">
+          <h3>Expected PM support</h3>
+          <ul class="report-list"><li>Maintain stakeholder alignment on pilot scope, priorities, and tradeoffs</li><li>Manage schedule tracking</li><li>Support Scrum ceremonies where useful</li><li>Identify requirement gaps or blind spots that Gerald may not have explicitly surfaced yet</li><li>Convert external asks into decision-ready discussions</li><li>Track dependencies, risks, and follow-up actions</li><li>Maintain milestone-level visibility</li></ul>
+        </article>
+      
+        <article class="subcard">
+          <h3>Recommended practical model</h3>
+          <ul class="report-list"><li>Operate day-to-day execution primarily through Kanban</li><li>Use PM effort primarily for milestones, risks, dependencies, and gap management rather than micro-task control</li><li>Review status and risks weekly</li><li>Re-baseline scope quickly when needed</li></ul>
+        </article>
+      </div>
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>8. Reporting Needed</h2>
+      </div>
+      <div class="section-body"><p>What is needed now is not a large reporting package, but a small set of reports that support decisions.</p></div>
+      <div class="subcard-grid">
+        <article class="subcard">
+          <h3>Essential reports</h3>
+          <ul class="report-list"><li><strong>Pilot Readiness Report</strong><ul class="report-list"><li>Current milestone</li><li>Remaining critical scope</li><li>Top risks</li><li>Blockers affecting the April pilot</li></ul></ul>
+<ul class="report-list"><li><strong>Committed vs. Delivered Report</strong><ul class="report-list"><li>Measured at the theme or milestone level, not at the micro-story level</li><li>What was intended in the last review window</li><li>What was actually delivered</li><li>What changed and why</li></ul></ul>
+<ul class="report-list"><li><strong>Risk / Dependency Log</strong><ul class="report-list"><li>Schedule risks</li><li>External dependencies</li><li>Open decisions</li><li>Owners and target dates</li></ul></ul>
+<ul class="report-list"><li><strong>Decision Log</strong><ul class="report-list"><li>Key product or delivery decisions</li><li>Why the decision was made</li><li>Impact on timeline, scope, or architecture</li></ul></ul>
+<ul class="report-list"><li><strong>Gap / Requirement Watchlist</strong><ul class="report-list"><li>Requirements that may still be missing from the current plan or implementation</li><li>Operational gaps that must be checked before pilot</li></ul></ul>
+        </article>
+      
+        <article class="subcard">
+          <h3>Lower-value reports for the current phase</h3>
+          <ul class="report-list"><li>Detailed sprint burndown focused on very small items</li><li>Story-point reporting for micro-slices of work</li><li>Formal status artifacts that duplicate the Kanban board without improving decisions</li></ul>
+        </article>
+      </div>
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>9. Recommended Governance Rhythm</h2>
+      </div>
+      <div class="section-body"><ul class="report-list"><li><strong>Daily or near-daily maker planning:</strong> Gerald / Bipin led, 1-3 day horizon</li><li><strong>Weekly PM alignment:</strong> milestones, schedule, risks, requirement gaps, external dependencies</li><li><strong>Stakeholder review as needed:</strong> demo, pilot readiness, scope adjustment</li></ul></div>
+      
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>10. Report Audience</h2>
+      </div>
+      <div class="section-body"><p>The expected consumers of the reporting output are:</p>
+<ul class="report-list"><li><strong>Primary:</strong> Gerald</li><li><strong>Secondary:</strong> relevant stakeholders</li></ul>
+<p>The reports should therefore function as alignment tools for actual decision-makers, not as administrative documents produced only for process compliance.</p></div>
+      
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>11. Key Alignment Message</h2>
+      </div>
+      <div class="section-body"><p>The project is not under-planned. It is being planned at the level appropriate for the current phase.</p>
+<p>The following must be explicit:</p>
+<ul class="report-list"><li>Pilot target and acceptance criteria</li><li>Milestone-level roadmap</li><li>Key risks and external dependencies</li><li>Clear status visibility for stakeholders</li></ul>
+<p>At the same time, forcing every small implementation step into a long-cycle process would not match the current delivery speed.</p></div>
+      
+    </section>
+  </div>
+            </section>
+          
+
+            <section class="page">
+              <div class="page-inner">
+    <section class="report-section">
+      <div class="section-heading">
+        <div class="section-kicker">Section</div>
+        <h2>12. Suggested Confluence Page Title</h2>
+      </div>
+      <div class="section-body"><p><code>OQC Project Alignment: April 2026 Pilot Scope, Operating Model, PM Expectations, and Reporting</code></p></div>
+      
+    </section>
+  </div>
+            </section>
+          
+    </main>
+  </body>
+</html>

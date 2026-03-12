@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report PPTX"
+  short_description: "Route report-to-PPTX work to refine or generate"
+  default_prompt: "Use $report-pptx to route this presentation request to either scenario refinement or final PPTX generation, depending on the input."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tmux Router"
+  short_description: "Route general tmux requests to the right tmux skill"
+  default_prompt: "Use $tmux-router to choose the right tmux sub-skill for layout changes, pane control, agent handoffs, localhost operations, or tmux snapshots."

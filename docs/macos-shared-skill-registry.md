@@ -18,22 +18,29 @@ Goal:
   local.skills/            # machine-local skills not stored in the repos
 
 ~/.skills/
-  html-report -> ~/Dev/skills/cyanluna.tools/reports/html-report
-  pdf-print -> ~/Dev/skills/cyanluna.tools/reports/pdf-print
+  report-html -> ~/Dev/skills/cyanluna.tools/reports/report-html
+  report-pdf-print -> ~/Dev/skills/cyanluna.tools/reports/report-pdf-print
   report-pipeline -> ~/Dev/skills/cyanluna.tools/reports/report-pipeline
-  pptx-generator -> ~/Dev/skills/cyanluna.tools/pptx/pptx-generator
-  pptx-refine -> ~/Dev/skills/cyanluna.tools/pptx/pptx-refine
+  report-pptx -> ~/Dev/skills/cyanluna.tools/reports/report-pptx
+  report-pptx-refine -> ~/Dev/skills/cyanluna.tools/reports/report-pptx-refine
+  report-pptx-generator -> ~/Dev/skills/cyanluna.tools/reports/report-pptx-generator
+  tmux-router -> ~/Dev/skills/cyanluna.tools/tmux/tmux-router
+  tmux-layout -> ~/Dev/skills/cyanluna.tools/tmux/tmux-layout
+  tmux-pane-control -> ~/Dev/skills/cyanluna.tools/tmux/tmux-pane-control
+  tmux-agent-bridge -> ~/Dev/skills/cyanluna.tools/tmux/tmux-agent-bridge
+  tmux-run-ops -> ~/Dev/skills/cyanluna.tools/tmux/tmux-run-ops
+  tmux-snapshot -> ~/Dev/skills/cyanluna.tools/tmux/tmux-snapshot
   kanban -> ~/Dev/skills/cyanluna.skills/kanban
   ...
 
 ~/.claude/skills/
-  html-report -> ~/.skills/html-report
+  report-html -> ~/.skills/report-html
   report-pipeline -> ~/.skills/report-pipeline
   ...
 
 ~/.codex/skills/
   .system/                # keep as-is
-  html-report -> ~/.skills/html-report
+  report-html -> ~/.skills/report-html
   report-pipeline -> ~/.skills/report-pipeline
   ...
 ```
@@ -74,11 +81,19 @@ Create shared registry links:
 
 ```bash
 ln -sfn ~/Dev/skills/cyanluna.tools/reports/report-pipeline ~/.skills/report-pipeline
-ln -sfn ~/Dev/skills/cyanluna.tools/reports/html-report ~/.skills/html-report
-ln -sfn ~/Dev/skills/cyanluna.tools/reports/pdf-print ~/.skills/pdf-print
+ln -sfn ~/Dev/skills/cyanluna.tools/reports/report-html ~/.skills/report-html
+ln -sfn ~/Dev/skills/cyanluna.tools/reports/report-pdf-print ~/.skills/report-pdf-print
 
-ln -sfn ~/Dev/skills/cyanluna.tools/pptx/pptx-generator ~/.skills/pptx-generator
-ln -sfn ~/Dev/skills/cyanluna.tools/pptx/pptx-refine ~/.skills/pptx-refine
+ln -sfn ~/Dev/skills/cyanluna.tools/reports/report-pptx ~/.skills/report-pptx
+ln -sfn ~/Dev/skills/cyanluna.tools/reports/report-pptx-refine ~/.skills/report-pptx-refine
+ln -sfn ~/Dev/skills/cyanluna.tools/reports/report-pptx-generator ~/.skills/report-pptx-generator
+
+ln -sfn ~/Dev/skills/cyanluna.tools/tmux/tmux-router ~/.skills/tmux-router
+ln -sfn ~/Dev/skills/cyanluna.tools/tmux/tmux-layout ~/.skills/tmux-layout
+ln -sfn ~/Dev/skills/cyanluna.tools/tmux/tmux-pane-control ~/.skills/tmux-pane-control
+ln -sfn ~/Dev/skills/cyanluna.tools/tmux/tmux-agent-bridge ~/.skills/tmux-agent-bridge
+ln -sfn ~/Dev/skills/cyanluna.tools/tmux/tmux-run-ops ~/.skills/tmux-run-ops
+ln -sfn ~/Dev/skills/cyanluna.tools/tmux/tmux-snapshot ~/.skills/tmux-snapshot
 
 ln -sfn ~/Dev/skills/cyanluna.skills/kanban ~/.skills/kanban
 ln -sfn ~/Dev/skills/cyanluna.skills/kanban-batch-run ~/.skills/kanban-batch-run
@@ -103,17 +118,31 @@ ln -sfn ~/.agents/skills/web-design-guidelines ~/.skills/web-design-guidelines
 
 Adjust the `local.skills` entries if your local-only skills live somewhere else.
 
+For the report skill subset only, you can also use:
+
+```bash
+bash ~/Dev/skills/cyanluna.tools/reports/scripts/install_shared_report_skills.sh
+```
+
 ## Register For Claude
 
 Point Claude to the shared registry for the shared skills:
 
 ```bash
 ln -sfn ~/.skills/report-pipeline ~/.claude/skills/report-pipeline
-ln -sfn ~/.skills/html-report ~/.claude/skills/html-report
-ln -sfn ~/.skills/pdf-print ~/.claude/skills/pdf-print
+ln -sfn ~/.skills/report-html ~/.claude/skills/report-html
+ln -sfn ~/.skills/report-pdf-print ~/.claude/skills/report-pdf-print
 
-ln -sfn ~/.skills/pptx-generator ~/.claude/skills/pptx-generator
-ln -sfn ~/.skills/pptx-refine ~/.claude/skills/pptx-refine
+ln -sfn ~/.skills/report-pptx ~/.claude/skills/report-pptx
+ln -sfn ~/.skills/report-pptx-refine ~/.claude/skills/report-pptx-refine
+ln -sfn ~/.skills/report-pptx-generator ~/.claude/skills/report-pptx-generator
+
+ln -sfn ~/.skills/tmux-router ~/.claude/skills/tmux-router
+ln -sfn ~/.skills/tmux-layout ~/.claude/skills/tmux-layout
+ln -sfn ~/.skills/tmux-pane-control ~/.claude/skills/tmux-pane-control
+ln -sfn ~/.skills/tmux-agent-bridge ~/.claude/skills/tmux-agent-bridge
+ln -sfn ~/.skills/tmux-run-ops ~/.claude/skills/tmux-run-ops
+ln -sfn ~/.skills/tmux-snapshot ~/.claude/skills/tmux-snapshot
 
 ln -sfn ~/.skills/kanban ~/.claude/skills/kanban
 ln -sfn ~/.skills/kanban-batch-run ~/.claude/skills/kanban-batch-run
@@ -148,11 +177,19 @@ Then link the shared skills:
 
 ```bash
 ln -sfn ~/.skills/report-pipeline ~/.codex/skills/report-pipeline
-ln -sfn ~/.skills/html-report ~/.codex/skills/html-report
-ln -sfn ~/.skills/pdf-print ~/.codex/skills/pdf-print
+ln -sfn ~/.skills/report-html ~/.codex/skills/report-html
+ln -sfn ~/.skills/report-pdf-print ~/.codex/skills/report-pdf-print
 
-ln -sfn ~/.skills/pptx-generator ~/.codex/skills/pptx-generator
-ln -sfn ~/.skills/pptx-refine ~/.codex/skills/pptx-refine
+ln -sfn ~/.skills/report-pptx ~/.codex/skills/report-pptx
+ln -sfn ~/.skills/report-pptx-refine ~/.codex/skills/report-pptx-refine
+ln -sfn ~/.skills/report-pptx-generator ~/.codex/skills/report-pptx-generator
+
+ln -sfn ~/.skills/tmux-router ~/.codex/skills/tmux-router
+ln -sfn ~/.skills/tmux-layout ~/.codex/skills/tmux-layout
+ln -sfn ~/.skills/tmux-pane-control ~/.codex/skills/tmux-pane-control
+ln -sfn ~/.skills/tmux-agent-bridge ~/.codex/skills/tmux-agent-bridge
+ln -sfn ~/.skills/tmux-run-ops ~/.codex/skills/tmux-run-ops
+ln -sfn ~/.skills/tmux-snapshot ~/.codex/skills/tmux-snapshot
 
 ln -sfn ~/.skills/kanban ~/.codex/skills/kanban
 ln -sfn ~/.skills/kanban-batch-run ~/.codex/skills/kanban-batch-run
@@ -182,7 +219,7 @@ If another tool supports a skills folder, use the same pattern:
 
 ```bash
 mkdir -p ~/.copilot/skills
-ln -sfn ~/.skills/html-report ~/.copilot/skills/html-report
+ln -sfn ~/.skills/report-html ~/.copilot/skills/report-html
 ```
 
 The important rule is:
@@ -218,10 +255,17 @@ This is the currently curated skill set for this environment:
 - `javis-*`
 - `kanban*`
 - `report-pipeline`
-- `html-report`
-- `pdf-print`
-- `pptx-refine`
-- `pptx-generator`
+- `report-html`
+- `report-pdf-print`
+- `report-pptx`
+- `report-pptx-refine`
+- `report-pptx-generator`
+- `tmux-router`
+- `tmux-layout`
+- `tmux-pane-control`
+- `tmux-agent-bridge`
+- `tmux-run-ops`
+- `tmux-snapshot`
 - `landing-page-guide-v2`
 - `web-search`
 - `web-to-markdown`
