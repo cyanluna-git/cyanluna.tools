@@ -2,6 +2,9 @@
 
 Shared skill repository for presentation, report, and document-generation workflows.
 
+Machine setup guide:
+- [`docs/macos-shared-skill-registry.md`](docs/macos-shared-skill-registry.md)
+
 Currently included:
 - `pptx/pptx-generator`
 - `pptx/pptx-refine`
