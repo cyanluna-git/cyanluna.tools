@@ -4,5 +4,9 @@ __pycache__/
 output/
 
 # Keep only the sample template, ignore any user-added templates
-pptx-generator/example/*.pptx
-!pptx-generator/example/sample-template.pptx
+pptx/pptx-generator/example/*.pptx
+!pptx/pptx-generator/example/sample-template.pptx
+
+# Generated report examples
+reports/html-report/example/*.html
+reports/html-report/example/*.pdf

@@ -1,0 +1,31 @@
+{
+  "branding": {
+    "logoPath": "/absolute/path/to/logo.png",
+    "departmentName": "Your Team Name",
+    "brandName": "Project Report",
+    "docType": "Management Brief",
+    "footerLabel": "Project Report"
+  },
+  "page": {
+    "format": "A4",
+    "landscape": true,
+    "marginTop": "10mm",
+    "marginRight": "10mm",
+    "marginBottom": "12mm",
+    "marginLeft": "10mm"
+  },
+  "theme": {
+    "primary": "#054E5A",
+    "primaryLight": "#0A6E7E",
+    "gold": "#E1B77E",
+    "goldDark": "#C89B5E",
+    "sage": "#5D7875",
+    "navy": "#123F6D",
+    "navyDark": "#06315B",
+    "coral": "#F68363",
+    "grayBg": "#F4F6F8"
+  },
+  "text": {
+    "preparedLabel": "Prepared as a printable HTML/PDF report"
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report Pipeline"
+  short_description: "Compose html-report and pdf-print for reusable report workflows"
+  default_prompt: "Use $report-pipeline to turn a markdown report into HTML and, when needed, PDF by coordinating $html-report and $pdf-print and setting up thin project wrappers/configs."

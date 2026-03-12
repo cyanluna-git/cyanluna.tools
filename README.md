@@ -1,6 +1,13 @@
-# PPTX Skills for Claude Code
+# cyanluna.tools
 
-Claude Code skills that generate editable PowerPoint presentations from documents and structured scenarios.
+Shared skill repository for presentation, report, and document-generation workflows.
+
+Currently included:
+- `pptx/pptx-generator`
+- `pptx/pptx-refine`
+- `reports/report-pipeline`
+- `reports/html-report`
+- `reports/pdf-print`
 
 ```
                                     +------------------+
@@ -16,6 +23,15 @@ Documents  ──>  pptx-refine  ──>  scenario.md  ──>  pptx-generator  
 (reports,        (analyze,         (structured       (python-pptx        (editable in
  specs,           inspect,          slide plan        code gen)           PowerPoint)
  notes)           interview)        + colors/fonts)
+```
+
+```text
+markdown report  ──>  report-pipeline  ──>  html-report  ──>  html
+                        (orchestrate)       (layout)
+                                                  |
+                                                  v
+                                             pdf-print  ──>  pdf
+                                             (print)
 ```
 
 ## Skills
@@ -54,12 +70,53 @@ Generates editable .pptx from a scenario markdown file using python-pptx.
 4. **Execute** -- Run the script, fix errors if any
 5. **Verify** -- Confirm slide count, file size, dimensions
 
+### `/report-pipeline` -- End-to-End Report Workflow
+
+Coordinates shared report-generation workflows by composing the lower-level report skills instead of duplicating their logic.
+
+**Accepts:** markdown reports, repository integration requests, report wrapper/config tasks
+**Outputs:** reusable report pipeline setup, plus `.html` and `.pdf` when executed end to end
+
+**Workflow:**
+1. **Choose** -- decide whether the task is HTML-only, PDF-only, or full pipeline
+2. **Compose** -- call `html-report` for layout and `pdf-print` for final PDF
+3. **Integrate** -- keep repository-specific wrappers thin and config-driven
+4. **Verify** -- confirm output files and wrapper wiring
+
+### `/html-report` -- Markdown Report to HTML
+
+Generates branded HTML reports from markdown source documents.
+
+**Accepts:** markdown reports, status notes, alignment docs, project updates
+**Outputs:** styled `.html`
+
+**Workflow:**
+1. **Read** -- inspect markdown structure and metadata
+2. **Brand** -- gather logo, department, config, or design reference
+3. **Render** -- run the shared HTML renderer with config or direct branding args
+4. **Verify** -- inspect output files and optionally screenshot the cover
+5. **Integrate** -- keep repository-specific wrappers thin and forward to the shared renderer
+
+### `/pdf-print` -- HTML to PDF
+
+Prints existing HTML files or URLs to PDF with shared page settings, orientation, and footer control.
+
+**Accepts:** local `.html`, `file://` URLs, `http://` or `https://` URLs
+**Outputs:** printable `.pdf`
+
+**Workflow:**
+1. **Confirm** -- verify the HTML source already exists
+2. **Configure** -- reuse page and footer settings from shared config when available
+3. **Print** -- run the Playwright-based PDF printer
+4. **Verify** -- inspect the generated PDF and compare against the HTML when layout matters
+5. **Pair** -- use this after `html-report` instead of re-implementing report layout in a second place
+
 ## Template Inspector
 
 The `pptx_inspector.py` analyzes any `.pptx` template and extracts everything AI needs to generate on-brand presentations -- similar to how Beautiful.ai or Gamma analyze your uploaded templates.
 
 ```bash
-python3 pptx-generator/pptx_inspector.py your-template.pptx
+python3 pptx/pptx-generator/pptx_inspector.py your-template.pptx
 ```
 
 **Extracts:**
@@ -159,7 +216,7 @@ right:
     Automated dashboard with real-time data.
 ```
 
-See [`pptx-generator/example/scenario-template.md`](pptx-generator/example/scenario-template.md) for the full format reference with all 8 layout types.
+See [`pptx/pptx-generator/example/scenario-template.md`](pptx/pptx-generator/example/scenario-template.md) for the full format reference with all 8 layout types.
 
 ### Supported Layouts
 
@@ -246,15 +303,26 @@ Or bring your own `template.pptx` -- the inspector handles any PowerPoint templa
 pip install python-pptx lxml
 ```
 
-### Register as Claude Code Skills
+### Register as Codex Skills
 
 ```bash
 # Clone
-git clone https://github.com/user/cyanluna.pptx.skills.git ~/dev/cyanluna.pptx.skills
+git clone https://github.com/cyanluna-git/cyanluna.tools.git ~/Dev/skills/cyanluna.tools
 
-# Register skills (symlink to Claude Code skills directory)
-ln -s ~/dev/cyanluna.pptx.skills/pptx-generator ~/.claude/skills/pptx-generator
-ln -s ~/dev/cyanluna.pptx.skills/pptx-refine ~/.claude/skills/pptx-refine
+# Register skills (symlink to Codex skills directory)
+ln -s ~/Dev/skills/cyanluna.tools/pptx/pptx-generator ~/.codex/skills/pptx-generator
+ln -s ~/Dev/skills/cyanluna.tools/pptx/pptx-refine ~/.codex/skills/pptx-refine
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pipeline ~/.codex/skills/report-pipeline
+ln -s ~/Dev/skills/cyanluna.tools/reports/html-report ~/.codex/skills/html-report
+ln -s ~/Dev/skills/cyanluna.tools/reports/pdf-print ~/.codex/skills/pdf-print
+```
+
+### Register as Claude Skills
+
+```bash
+ln -s ~/Dev/skills/cyanluna.tools/reports/report-pipeline ~/.claude/skills/report-pipeline
+ln -s ~/Dev/skills/cyanluna.tools/reports/html-report ~/.claude/skills/html-report
+ln -s ~/Dev/skills/cyanluna.tools/reports/pdf-print ~/.claude/skills/pdf-print
 ```
 
 ### Verify
@@ -262,31 +330,44 @@ ln -s ~/dev/cyanluna.pptx.skills/pptx-refine ~/.claude/skills/pptx-refine
 ```bash
 # Helper library
 python3 -c "
-import sys; sys.path.insert(0, 'pptx-generator')
+import sys; sys.path.insert(0, 'pptx/pptx-generator')
 from pptx_helper import *
 print('pptx_helper OK')
 print('hex_to_rgb:', hex_to_rgb('#054E5A'))
 "
 
 # Inspector (optional — only needed if using templates)
-python3 pptx-generator/pptx_inspector.py --help 2>/dev/null || echo "Usage: python3 pptx_inspector.py <template.pptx> [--json]"
+python3 pptx/pptx-generator/pptx_inspector.py --help 2>/dev/null || echo "Usage: python3 pptx_inspector.py <template.pptx> [--json]"
 ```
 
 ## Project Structure
 
-```
-cyanluna.pptx.skills/
+```text
+cyanluna.tools/
 ├── README.md
-├── pptx-generator/
-│   ├── SKILL.md                    # Generator skill definition
-│   ├── pptx_helper.py              # Verified helper library (19 functions)
-│   ├── pptx_inspector.py           # Template analyzer (colors, fonts, layouts)
-│   └── example/
-│       ├── create_sample_template.py   # Generates sample-template.pptx
-│       ├── sample-template.pptx        # Ready-to-use modern template
-│       └── scenario-template.md        # Scenario format reference
-└── pptx-refine/
-    └── SKILL.md                    # Refine skill definition
+├── pptx/
+│   ├── pptx-generator/
+│   │   ├── SKILL.md
+│   │   ├── pptx_helper.py
+│   │   ├── pptx_inspector.py
+│   │   └── example/
+│   └── pptx-refine/
+│       └── SKILL.md
+├── reports/
+│   ├── report-pipeline/
+│   │   ├── SKILL.md
+│   │   └── agents/
+│   ├── html-report/
+│   │   ├── SKILL.md
+│   │   ├── scripts/
+│   │   ├── references/
+│   │   └── agents/
+│   └── pdf-print/
+│       ├── SKILL.md
+│       ├── scripts/
+│       ├── references/
+│       └── agents/
+└── workthrough/
 ```
 
 ## License

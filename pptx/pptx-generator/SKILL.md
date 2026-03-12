@@ -74,7 +74,7 @@ Create `build_ppt_{project}.py` in the scenario file's directory.
 ```python
 import sys, os
 # Resolve the skill directory (adjust if installed elsewhere)
-SKILL_DIR = os.path.expanduser("~/dev/cyanluna.pptx.skills/pptx-generator")
+SKILL_DIR = os.path.expanduser("~/Dev/skills/cyanluna.tools/pptx/pptx-generator")
 sys.path.insert(0, SKILL_DIR)
 from pptx_helper import *
 ```

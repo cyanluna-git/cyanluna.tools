@@ -62,7 +62,7 @@ Also ask for (if not provided):
 Run the template inspector to extract theme, colors, fonts, and available layouts:
 
 ```bash
-SKILL_DIR=$(python3 -c "import os; print(os.path.expanduser('~/dev/cyanluna.pptx.skills/pptx-generator'))")
+SKILL_DIR=$(python3 -c "import os; print(os.path.expanduser('~/Dev/skills/cyanluna.tools/pptx/pptx-generator'))")
 python3 "$SKILL_DIR/pptx_inspector.py" /path/to/template.pptx
 ```
 
@@ -334,7 +334,7 @@ Estimated: 7 slides, ~10 minutes presentation
 ## Scenario Format Reference
 
 The output must conform to the format defined in the pptx-generator skill:
-`pptx-generator/example/scenario-template.md` (in the same repo)
+`pptx/pptx-generator/example/scenario-template.md` (in the same repo)
 
 ### Supported Layouts
 | layout | When to use |
