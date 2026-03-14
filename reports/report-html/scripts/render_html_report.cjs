@@ -49,44 +49,17 @@ const LOCALES = {
       purpose: ["목적"],
       audience: ["대상"],
     },
-    sections: {
-      purpose: ["문서 목적"],
-      currentStatus: ["현재 프로젝트 상태"],
-      pilotGoal: ["파일럿 목표"],
-      roadmap: ["제안하는 로드맵"],
-      pmRole: ["PM에게 기대하는 역할"],
-      reports: ["필요한 리포트"],
-      alignment: ["핵심 정렬 메시지"],
-    },
-    subsections: {
-      snapshot: ["현재 실행 스냅샷"],
-      capabilities: ["현재까지 확보된 핵심 역량"],
-      targetTiming: ["목표 시점"],
-      targetScope: ["대상 범위"],
-      expectedSupport: ["기대 역할"],
-      essentialReports: ["필수 리포트"],
-    },
+    sections: {},
+    subsections: {},
     text: {
-      docType: "Management Brief",
+      docType: "Report",
       brand: "Project Report",
       departmentLabel: "Department",
-      contentsTitle: "읽는 흐름과 핵심 포인트",
-      contentsNote: "현재 상태, 파일럿 기준, 운영 모델, PM 기대 역할, 보고 체계를 빠르게 정렬하기 위한 인쇄용 버전입니다.",
-      snapshotTitle: "현재 상태와 파일럿 관문",
-      snapshotNote: "핵심은 장주기 계획이 아니라 파일럿 운영이 가능한 안정성과 통합 완성도 확보입니다.",
-      capabilitiesTitle: "확보된 핵심 역량",
-      pilotScopeTitle: "파일럿 목표 범위",
-      roadmapTitle: "4월 파일럿까지의 단계별 계획",
-      roadmapNote: "상세 스프린트 예측보다 단계별 완료 정의와 통합 리스크를 분명히 보는 편이 현재 운영 방식에 더 적합합니다.",
-      operatingTitle: "운영 리듬, PM 역할, 보고 체계",
-      operatingNote: "PM은 micro-task tracking보다 milestone, risk, dependency, stakeholder alignment를 강하게 붙드는 역할에 집중해야 합니다.",
-      pmRoleTitle: "PM 기대 역할",
-      essentialReportsTitle: "필수 리포트 세트",
+      contentsTitle: "목차",
+      contentsNote: "",
       sectionKicker: "Section",
       contentsKicker: "Contents",
-      snapshotKicker: "Snapshot",
-      roadmapKicker: "Roadmap",
-      operatingKicker: "Operating Model",
+      overviewKicker: "Overview",
       dateLabel: "작성일",
       purposeLabel: "목적",
       audienceLabel: "대상",
@@ -102,44 +75,17 @@ const LOCALES = {
       purpose: ["Purpose"],
       audience: ["Audience"],
     },
-    sections: {
-      purpose: ["Purpose of This Document", "Document Purpose"],
-      currentStatus: ["Current Project Status"],
-      pilotGoal: ["Pilot Objective", "Pilot Goal"],
-      roadmap: ["Proposed Roadmap"],
-      pmRole: ["What I Need from the PM", "What We Need from the PM"],
-      reports: ["Reporting Needed", "Reports Needed"],
-      alignment: ["Key Alignment Message"],
-    },
-    subsections: {
-      snapshot: ["Current execution snapshot"],
-      capabilities: ["Core capabilities already in place"],
-      targetTiming: ["Target timing"],
-      targetScope: ["Target scope"],
-      expectedSupport: ["Expected PM support"],
-      essentialReports: ["Essential reports"],
-    },
+    sections: {},
+    subsections: {},
     text: {
-      docType: "Management Brief",
+      docType: "Report",
       brand: "Project Report",
       departmentLabel: "Department",
-      contentsTitle: "Reading Flow and Key Decisions",
-      contentsNote: "This print layout aligns current status, pilot criteria, operating model, PM expectations, and reporting needs in one management-ready brief.",
-      snapshotTitle: "Current Status and Pilot Gate",
-      snapshotNote: "The immediate objective is not long-cycle planning. It is to secure enough stability and integration completeness to run a meaningful pilot.",
-      capabilitiesTitle: "Core Capabilities in Place",
-      pilotScopeTitle: "Pilot Objective and Scope",
-      roadmapTitle: "Roadmap to the April Pilot",
-      roadmapNote: "The right management view for this phase is milestone completion and integration risk, not an over-detailed sprint forecast.",
-      operatingTitle: "Operating Rhythm, PM Role, and Reporting",
-      operatingNote: "The PM focus should stay on milestones, risk, dependencies, and stakeholder alignment rather than fine-grained micro-task control.",
-      pmRoleTitle: "Expected PM Support",
-      essentialReportsTitle: "Essential Reporting Set",
+      contentsTitle: "Table of Contents",
+      contentsNote: "",
       sectionKicker: "Section",
       contentsKicker: "Contents",
-      snapshotKicker: "Snapshot",
-      roadmapKicker: "Roadmap",
-      operatingKicker: "Operating Model",
+      overviewKicker: "Overview",
       dateLabel: "Date",
       purposeLabel: "Purpose",
       audienceLabel: "Audience",
@@ -456,46 +402,6 @@ function getMetaAny(document, labels) {
   );
 }
 
-function findSectionAny(document, titles) {
-  const normalizedTitles = titles.map((title) => normalizeTitle(title));
-  return document.sections.find((section) => normalizedTitles.includes(normalizeTitle(section.title)));
-}
-
-function findSubsectionAny(section, titles) {
-  if (!section) return undefined;
-  const normalizedTitles = titles.map((title) => normalizeTitle(title));
-  return section.subsections.find((subsection) =>
-    normalizedTitles.includes(normalizeTitle(subsection.title))
-  );
-}
-
-function collectBulletTexts(lines) {
-  return splitBlocks(lines)
-    .flatMap((block) =>
-      block
-        .map((line) => line.match(/^(\s*)([-*]|\d+\.)\s+(.*)$/)?.[3]?.trim())
-        .filter(Boolean)
-    );
-}
-
-function extractKanbanStats(section, snapshotSubsection) {
-  const line = snapshotSubsection?.content.find((entry) => entry.toLowerCase().includes("kanban"));
-  if (!line) return [];
-
-  const cleaned = line.replace(/\*\*/g, "");
-  const koMatches = [...cleaned.matchAll(/([A-Za-z][A-Za-z /&-]+?)\s+(\d+)건/g)].map((match) => ({
-    label: match[1].trim(),
-    value: match[2],
-  }));
-  if (koMatches.length) return koMatches;
-
-  const enMatches = [...cleaned.matchAll(/(\d+)\s+([A-Za-z][A-Za-z /&-]+)/g)].map((match) => ({
-    label: match[2].trim(),
-    value: match[1],
-  }));
-  return enMatches;
-}
-
 function extractParagraphSummary(lines) {
   return splitBlocks(lines)
     .filter((block) => !block.every((line) => /^(\s*)([-*]|\d+\.)\s+/.test(line)))
@@ -585,39 +491,7 @@ function buildHtml(document, sourcePath, options) {
   const purpose = getMetaAny(document, locale.metaLabels.purpose);
   const audience = getMetaAny(document, locale.metaLabels.audience);
   const writtenAt = getMetaAny(document, locale.metaLabels.date);
-  const introSummary = extractParagraphSummary(document.intro);
-  const introHtml = renderBlocks(introSummary);
-
-  const purposeSection = findSectionAny(document, locale.sections.purpose);
-  const currentStatus = findSectionAny(document, locale.sections.currentStatus);
-  const pilotGoal = findSectionAny(document, locale.sections.pilotGoal);
-  const roadmap = findSectionAny(document, locale.sections.roadmap);
-  const pmRole = findSectionAny(document, locale.sections.pmRole);
-  const reports = findSectionAny(document, locale.sections.reports);
-  const alignment = findSectionAny(document, locale.sections.alignment);
-
-  const snapshotSection = findSubsectionAny(currentStatus, locale.subsections.snapshot);
-  const capabilitiesSection = findSubsectionAny(currentStatus, locale.subsections.capabilities);
-  const timingSection = findSubsectionAny(pilotGoal, locale.subsections.targetTiming);
-  const scopeSection = findSubsectionAny(pilotGoal, locale.subsections.targetScope);
-  const expectedSupportSection = findSubsectionAny(pmRole, locale.subsections.expectedSupport);
-  const essentialReportsSection = findSubsectionAny(reports, locale.subsections.essentialReports);
-
-  const statusBullets = collectBulletTexts(capabilitiesSection?.content ?? []);
-  const pilotBullets = collectBulletTexts(scopeSection?.content ?? pilotGoal?.content ?? []);
-  const roleBullets = collectBulletTexts(expectedSupportSection?.content ?? []);
-  const reportBullets = collectBulletTexts(essentialReportsSection?.content ?? []);
-  const alignmentBullets = collectBulletTexts(alignment?.content ?? []);
-  const roadmapCards = roadmap?.subsections ?? [];
-  const kanbanStats = extractKanbanStats(currentStatus, snapshotSection);
-  const coverSummaryHtml = renderBlocks(
-    extractParagraphSummary(purposeSection?.content?.length ? purposeSection.content : document.intro)
-  );
-  const coverHighlights = [
-    timingSection?.content?.join(" ").trim(),
-    scopeSection?.content?.join(" ").trim(),
-    alignmentBullets[0],
-  ].filter(Boolean);
+  const introHtml = renderBlocks(extractParagraphSummary(document.intro));
 
   return `<!doctype html>
 <html lang="${locale.lang}">
@@ -892,36 +766,6 @@ function buildHtml(document, sourcePath, options) {
         margin-bottom: 0;
       }
 
-      .cover-chip-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 20px;
-      }
-
-      body.page-landscape .cover-chip-list {
-        gap: 8px;
-        margin-top: 14px;
-      }
-
-      .cover-chip {
-        display: block;
-        padding: 12px 14px;
-        border-radius: 12px;
-        background: rgba(5, 78, 90, 0.08);
-        border: 1px solid rgba(5, 78, 90, 0.10);
-        color: var(--navy-dark);
-        font-size: 13px;
-        line-height: 1.55;
-        font-weight: 700;
-      }
-
-      body.page-landscape .cover-chip {
-        padding: 10px 12px;
-        font-size: 12px;
-        line-height: 1.42;
-      }
-
       .meta-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -936,9 +780,6 @@ function buildHtml(document, sourcePath, options) {
       }
 
       .meta-card,
-      .stat-card,
-      .highlight-card,
-      .timeline-card,
       .subcard {
         background: var(--white);
         border-radius: 14px;
@@ -1141,68 +982,21 @@ function buildHtml(document, sourcePath, options) {
         color: var(--text-light);
       }
 
-      .stats-grid,
-      .highlight-grid,
-      .timeline-grid,
       .subcard-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 18px;
+        margin-top: 18px;
       }
 
-      .stats-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        margin-bottom: 18px;
-      }
-
-      body.page-landscape .stats-grid {
-        margin-bottom: 14px;
-      }
-
-      .stat-card,
-      .highlight-card,
-      .timeline-card,
       .subcard {
         padding: 22px;
       }
 
-      body.page-landscape .stat-card,
-      body.page-landscape .highlight-card,
-      body.page-landscape .timeline-card,
       body.page-landscape .subcard {
         padding: 16px;
       }
 
-      .stat-card:nth-child(1) { border-top: 4px solid var(--primary); }
-      .stat-card:nth-child(2) { border-top: 4px solid var(--gold); }
-      .stat-card:nth-child(3) { border-top: 4px solid var(--sage); }
-
-      .stat-value {
-        color: var(--navy-dark);
-        font-size: 36px;
-        font-weight: 800;
-        letter-spacing: -0.04em;
-        margin-bottom: 6px;
-      }
-
-      body.page-landscape .stat-value {
-        font-size: 28px;
-      }
-
-      .stat-label {
-        color: var(--text-light);
-        font-size: 14px;
-      }
-
-      .highlight-card {
-        background: linear-gradient(180deg, #ffffff 0%, #fafcfd 100%);
-      }
-
-      .highlight-card:nth-child(1) { border-left: 4px solid var(--primary); }
-      .highlight-card:nth-child(2) { border-left: 4px solid var(--gold); }
-
-      .highlight-card h3,
-      .timeline-card h3,
       .subcard h3 {
         margin: 0 0 12px;
         color: var(--navy-dark);
@@ -1210,71 +1004,9 @@ function buildHtml(document, sourcePath, options) {
         letter-spacing: -0.02em;
       }
 
-      body.page-landscape .highlight-card h3,
-      body.page-landscape .timeline-card h3,
       body.page-landscape .subcard h3 {
         margin: 0 0 10px;
         font-size: 16px;
-      }
-
-      .highlight-card ul,
-      .timeline-card ul {
-        margin: 0;
-        padding-left: 18px;
-      }
-
-      .highlight-card li,
-      .timeline-card li {
-        margin-bottom: 10px;
-        color: var(--text);
-        font-size: 15px;
-        line-height: 1.68;
-      }
-
-      body.page-landscape .highlight-card li,
-      body.page-landscape .timeline-card li {
-        margin-bottom: 7px;
-        font-size: 13px;
-        line-height: 1.46;
-      }
-
-      .timeline-card:nth-child(4n + 1) { border-top: 4px solid var(--primary); }
-      .timeline-card:nth-child(4n + 2) { border-top: 4px solid var(--gold); }
-      .timeline-card:nth-child(4n + 3) { border-top: 4px solid var(--sage); }
-      .timeline-card:nth-child(4n + 4) { border-top: 4px solid var(--coral); }
-
-      .two-column {
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 20px;
-      }
-
-      body.page-landscape .two-column {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-      }
-
-      .subcard-grid {
-        margin-top: 18px;
-      }
-
-      .chip-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 18px;
-      }
-
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        padding: 10px 14px;
-        border-radius: 999px;
-        background: rgba(93, 120, 117, 0.10);
-        color: var(--sage);
-        border: 1px solid rgba(93, 120, 117, 0.18);
-        font-size: 14px;
-        font-weight: 700;
       }
 
       .source {
@@ -1363,11 +1095,8 @@ function buildHtml(document, sourcePath, options) {
           </div>
           <div class="cover-right">
             <div class="cover-panel">
-              <div class="section-tag">${text.operatingKicker}</div>
-              <div class="cover-summary">${coverSummaryHtml}</div>
-              <div class="cover-chip-list">
-                ${coverHighlights.map((item) => `<div class="cover-chip">${formatInline(item)}</div>`).join("")}
-              </div>
+              <div class="section-tag">${text.overviewKicker}</div>
+              <div class="cover-summary">${introHtml}</div>
             </div>
           </div>
         </div>
@@ -1402,104 +1131,6 @@ function buildHtml(document, sourcePath, options) {
             <div class="page-note">${text.contentsNote}</div>
           </div>
           <ul class="toc">${buildToc(document)}</ul>
-        </div>
-      </section>
-
-      <section class="page">
-        <div class="page-inner">
-          <div class="page-header">
-            <div>
-              <div class="page-kicker">${text.snapshotKicker}</div>
-              <h2 class="page-title">${text.snapshotTitle}</h2>
-              <div class="page-title-bar"></div>
-            </div>
-            <div class="page-note">${text.snapshotNote}</div>
-          </div>
-          ${
-            kanbanStats.length
-              ? `<div class="stats-grid">
-                  ${kanbanStats
-                    .map(
-                      (item) => `
-                        <article class="stat-card">
-                          <div class="stat-value">${escapeHtml(item.value)}</div>
-                          <div class="stat-label">${escapeHtml(item.label)}</div>
-                        </article>
-                      `
-                    )
-                    .join("")}
-                </div>`
-              : ""
-          }
-          <div class="highlight-grid">
-            <article class="highlight-card">
-              <h3>${text.capabilitiesTitle}</h3>
-              <ul>
-                ${statusBullets.map((item) => `<li>${formatInline(item)}</li>`).join("")}
-              </ul>
-            </article>
-            <article class="highlight-card">
-              <h3>${text.pilotScopeTitle}</h3>
-              <ul>
-                ${pilotBullets.map((item) => `<li>${formatInline(item)}</li>`).join("")}
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="page">
-        <div class="page-inner">
-          <div class="page-header">
-            <div>
-              <div class="page-kicker">${text.roadmapKicker}</div>
-              <h2 class="page-title">${text.roadmapTitle}</h2>
-              <div class="page-title-bar"></div>
-            </div>
-            <div class="page-note">${text.roadmapNote}</div>
-          </div>
-          <div class="timeline-grid">
-            ${roadmapCards
-              .map(
-                (item) => `
-                  <article class="timeline-card">
-                    <h3>${escapeHtml(item.title)}</h3>
-                    ${renderBlocks(item.content)}
-                  </article>
-                `
-              )
-              .join("")}
-          </div>
-        </div>
-      </section>
-
-      <section class="page">
-        <div class="page-inner">
-          <div class="page-header">
-            <div>
-              <div class="page-kicker">${text.operatingKicker}</div>
-              <h2 class="page-title">${text.operatingTitle}</h2>
-              <div class="page-title-bar"></div>
-            </div>
-            <div class="page-note">${text.operatingNote}</div>
-          </div>
-          <div class="two-column">
-            <article class="subcard">
-              <h3>${text.pmRoleTitle}</h3>
-              <ul class="report-list">
-                ${roleBullets.map((item) => `<li>${formatInline(item)}</li>`).join("")}
-              </ul>
-            </article>
-            <article class="subcard">
-              <h3>${text.essentialReportsTitle}</h3>
-              <ul class="report-list">
-                ${reportBullets.map((item) => `<li>${formatInline(item)}</li>`).join("")}
-              </ul>
-            </article>
-          </div>
-          <div class="chip-list">
-            ${alignmentBullets.map((item) => `<span class="chip">${formatInline(item)}</span>`).join("")}
-          </div>
         </div>
       </section>
 
