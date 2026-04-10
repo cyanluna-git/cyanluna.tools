@@ -10,3 +10,24 @@ pptx/pptx-generator/example/*.pptx
 # Generated report examples
 reports/html-report/example/*.html
 reports/html-report/example/*.pdf
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Python
+.venv/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+Thumbs.db
+
+# Logs
+*.log
